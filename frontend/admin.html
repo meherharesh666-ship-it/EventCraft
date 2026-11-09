@@ -409,7 +409,7 @@
     
 
 <script>
-const API_URL = "http://localhost:3000/enquiry";
+const API_URL = "https://eventcraft-873s.onrender.com/enquiry";
 
 const adminToken = localStorage.getItem("eventcraft_admin_token");
 
@@ -446,7 +446,7 @@ function getAdminHeaders(json = false) {
 async function verifyAdmin() {
     try {
         const response = await fetch(
-            "http://localhost:3000/api/admin/verify",
+            "https://eventcraft-873s.onrender.com/api/admin/verify",
             {
                 method: "GET",
                 headers: getAdminHeaders()

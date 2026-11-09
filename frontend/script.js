@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const API_URL = "http://localhost:3000/enquiry";
+    const API_URL = "https://eventcraft-873s.onrender.com/enquiry";
 
     // MOBILE NAVIGATION
     const navToggle = document.getElementById("navToggle");
