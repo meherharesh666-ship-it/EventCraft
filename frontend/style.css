@@ -548,7 +548,7 @@ section { scroll-margin-top: 84px; }
   .nav-links, .nav-actions { display: none; }
   .nav-toggle { display: flex; }
 
-  .nav-links.open {
+    .nav-links.active {
     display: flex;
     flex-direction: column;
     position: absolute;
