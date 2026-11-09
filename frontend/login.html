@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — EventCraft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .auth-section {
+    min-height: calc(100vh - 73px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 24px;
+    background: var(--bg-alt);
+  }
+  .auth-card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 40px 36px;
+  }
+  .auth-eyebrow {
+    text-align: center;
+    color: var(--gold);
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .auth-card h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.9rem;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .auth-sub {
+    text-align: center;
+    color: var(--bronze);
+    font-size: 0.9rem;
+    margin-bottom: 32px;
+  }
+  .form-field-wrap { position: relative; }
+  .toggle-pw {
+    position: absolute;
+    right: 14px;
+    top: 38px;
+    background: none;
+    border: none;
+    color: var(--bronze);
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .toggle-pw:hover { color: var(--gold); }
+  .form-error {
+    background: rgba(201, 90, 90, 0.1);
+    border: 1px solid rgba(201, 90, 90, 0.35);
+    color: #E0938F;
+    font-size: 0.85rem;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    display: none;
+  }
+  .form-error.show { display: block; }
+  .auth-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+    font-size: 0.82rem;
+  }
+  .auth-meta-row label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--bronze);
+    cursor: pointer;
+  }
+  .auth-meta-row a { color: var(--gold); }
+  .auth-meta-row a:hover { text-decoration: underline; }
+  .auth-switch {
+    text-align: center;
+    margin-top: 22px;
+    font-size: 0.88rem;
+    color: var(--bronze);
+  }
+  .auth-switch a { color: var(--gold); font-weight: 500; }
+  .auth-switch a:hover { text-decoration: underline; }
+  .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Event<span>Craft</span></a>
+    <div class="nav-links">
+      <a href="index.html#events">Events</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#gallery">Gallery</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="btn-ghost">Log In</a>
+      <a href="register.html" class="btn-gold">Sign Up</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<section class="auth-section">
+  <div class="auth-card">
+    <p class="auth-eyebrow">Welcome back</p>
+    <h1>Log In</h1>
+    <p class="auth-sub">Enter your details to access your account</p>
+
+    <div class="form-error" id="formError"></div>
+
+    <form id="loginForm" novalidate>
+      <div class="form-field">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+      </div>
+
+      <div class="form-field form-field-wrap">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" required minlength="6">
+        <button type="button" class="toggle-pw" id="togglePw">Show</button>
+      </div>
+
+      <div class="auth-meta-row">
+        <label><input type="checkbox" id="remember" name="remember"> Remember me</label>
+        <a href="#">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="btn-gold btn-lg btn-submit" id="submitBtn">Log In</button>
+      <p class="form-status" id="formStatus"></p>
+    </form>
+
+    <p class="auth-switch">Don't have an account? <a href="register.html">Sign up</a></p>
+  </div>
+</section>
+
+<script>
+  // Mobile nav toggle
+  document.getElementById('navToggle').addEventListener('click', function () {
+    document.querySelector('.nav-links').classList.toggle('open');
+  });
+
+  // Show/hide password
+  const togglePw = document.getElementById('togglePw');
+  const pwField = document.getElementById('password');
+  togglePw.addEventListener('click', function () {
+    const isPw = pwField.type === 'password';
+    pwField.type = isPw ? 'text' : 'password';
+    togglePw.textContent = isPw ? 'Hide' : 'Show';
+  });
+
+  // Login submit -> API call
+  const loginForm = document.getElementById('loginForm');
+  const formError = document.getElementById('formError');
+  const formStatus = document.getElementById('formStatus');
+  const submitBtn = document.getElementById('submitBtn');
+
+  loginForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    formError.classList.remove('show');
+    formStatus.textContent = '';
+
+    const email = document.getElementById('email').value.trim();
+    const password = pwField.value;
+
+    if (!email || !password) {
+      formError.textContent = 'Please fill in both fields.';
+      formError.classList.add('show');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Logging in...';
+
+    try {
+      const res = await fetch('http://localhost:3000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Invalid email or password.');
+      }
+
+      // Store token (adjust to your auth strategy — cookie/session also fine)
+      if (data.token) {
+        localStorage.setItem('eventcraft_token', data.token);
+
+        window.location.href = "customer-dashboard.html";
+      }
+
+      formStatus.textContent = 'Login successful! Redirecting...';
+      setTimeout(function () {
+        window.location.href = 'index.html';
+      }, 800);
+
+    } catch (err) {
+      formError.textContent = err.message || 'Something went wrong. Please try again.';
+      formError.classList.add('show');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Log In';
+    }
+  });
+</script>
+
+</body>
+</html>

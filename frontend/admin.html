@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | EventCraft</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #15120f;
+            color: #f5f1e8;
+        }
+
+        /* NAVBAR */
+
+        nav {
+            height: 80px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 6%;
+
+            background: #100e0c;
+
+            border-bottom: 1px solid #332e28;
+        }
+
+        .logo {
+            font-family: Georgia, serif;
+
+            font-size: 28px;
+
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #d6aa55;
+        }
+
+        .admin-title {
+            color: #d6aa55;
+
+            font-size: 15px;
+        }
+
+        .logout {
+            padding: 10px 20px;
+
+            border: 1px solid #39342d;
+
+            border-radius: 20px;
+
+            color: white;
+
+            text-decoration: none;
+        }
+
+        .logout:hover {
+            background: #d6aa55;
+
+            color: #17130f;
+        }
+
+
+        /* MAIN */
+
+        .container {
+            width: 90%;
+
+            max-width: 1250px;
+
+            margin: 40px auto;
+        }
+
+
+        .heading {
+            margin-bottom: 30px;
+        }
+
+        .heading h1 {
+            font-family: Georgia, serif;
+
+            font-size: 38px;
+
+            margin-bottom: 8px;
+        }
+
+        .heading p {
+            color: #9d8e7d;
+        }
+
+
+        /* CARDS */
+
+        .stats {
+            display: flex;
+
+            gap: 20px;
+
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            flex: 1;
+
+            background: #1c1916;
+
+            border: 1px solid #39342d;
+
+            border-radius: 15px;
+
+            padding: 25px;
+        }
+
+        .stat-card h3 {
+            color: #9d8e7d;
+
+            font-size: 15px;
+
+            margin-bottom: 10px;
+        }
+
+        .stat-card h2 {
+            color: #d6aa55;
+
+            font-size: 32px;
+        }
+
+
+        /* TABLE */
+
+        .table-box {
+            background: #1c1916;
+
+            border: 1px solid #39342d;
+
+            border-radius: 15px;
+
+            padding: 25px;
+
+            overflow-x: auto;
+        }
+
+        .table-box h2 {
+            margin-bottom: 20px;
+
+            font-family: Georgia, serif;
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 900px;
+        }
+
+        th {
+            text-align: left;
+
+            color: #d6aa55;
+
+            padding: 15px 10px;
+
+            border-bottom: 1px solid #39342d;
+        }
+
+        td {
+            padding: 15px 10px;
+
+            border-bottom: 1px solid #2d2925;
+
+            color: #ddd;
+        }
+
+        tr:hover {
+            background: #211e1a;
+        }
+
+
+        /* BUTTONS */
+
+        .btn {
+            border: none;
+
+            padding: 8px 14px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            margin-right: 5px;
+        }
+
+        .view-btn {
+            background: #d6aa55;
+
+            color: #17130f;
+        }
+
+        .edit-btn {
+            background: #4c83d1;
+
+            color: white;
+        }
+
+        .delete-btn {
+            background: #c94c4c;
+
+            color: white;
+        }
+
+
+        /* EMPTY */
+
+        .empty {
+            text-align: center;
+
+            padding: 40px;
+
+            color: #9d8e7d;
+        }
+
+
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+
+            .stats {
+                flex-direction: column;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .heading h1 {
+                font-size: 30px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- NAVBAR -->
+
+    <nav>
+
+        <div class="logo">
+            Event<span>Craft</span>
+        </div>
+
+        <div class="admin-title">   
+            ADMIN DASHBOARD
+        </div>
+        <a href="#" class="logout" id="adminLogoutBtn">
+            Logout
+        </a>
+        
+
+    </nav>
+
+
+
+    <!-- MAIN -->
+
+    <div class="container">
+
+
+        <div class="heading">
+
+            <h1>
+                Admin Dashboard
+            </h1>
+
+            <p>
+                Manage customer event enquiries
+            </p>
+
+        </div>
+
+
+
+        <!-- STATS -->
+
+        <div class="stats">
+
+            <div class="stat-card">
+
+                <h3>
+                    TOTAL ENQUIRIES
+                </h3>
+
+                <h2 id="totalEnquiries">
+                    0
+                </h2>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    PENDING ENQUIRIES
+                </h3>
+
+                <h2 id="pendingEnquiries">
+                    0
+                </h2>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    EVENT TYPES
+                </h3>
+
+                <h2 id="eventTypes">
+                    0
+                </h2>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- TABLE -->
+
+        <div class="table-box">
+
+            <h2>
+                Customer Enquiries
+            </h2>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Name</th>
+
+                        <th>Email</th>
+
+                        <th>Phone</th>
+
+                        <th>Event</th>
+
+                        <th>Date</th>
+
+                        <th>Guests</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="enquiryTable">
+
+                    <tr>
+
+                        <td colspan="7"
+                            class="empty">
+
+                            Loading enquiries...
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+    </div>
+
+
+
+    
+
+<script>
+const API_URL = "http://localhost:3000/enquiry";
+
+const adminToken = localStorage.getItem("eventcraft_admin_token");
+
+// ================= ADMIN TOKEN VERIFICATION =================
+
+if (!adminToken) {
+    window.location.href = "admin-login.html";
+}
+
+const adminLogoutBtn = document.getElementById("adminLogoutBtn");
+
+adminLogoutBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    localStorage.removeItem("eventcraft_admin_token");
+
+    window.location.href = "admin-login.html";
+});
+
+// Common headers for admin API requests
+function getAdminHeaders(json = false) {
+    const headers = {
+        "Authorization": `Bearer ${adminToken}`
+    };
+
+    if (json) {
+        headers["Content-Type"] = "application/json";
+    }
+
+    return headers;
+}
+
+// Verify admin with backend
+async function verifyAdmin() {
+    try {
+        const response = await fetch(
+            "http://localhost:3000/api/admin/verify",
+            {
+                method: "GET",
+                headers: getAdminHeaders()
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Admin verification failed");
+        }
+
+        await response.json();
+
+        loadEnquiries();
+
+    } catch (error) {
+        localStorage.removeItem("eventcraft_admin_token");
+        window.location.href = "admin-login.html";
+    }
+}
+
+
+// ================= LOAD ALL ENQUIRIES =================
+
+async function loadEnquiries() {
+    const table = document.getElementById("enquiryTable");
+
+    table.innerHTML = `
+        <tr>
+            <td colspan="7" class="empty">Loading enquiries...</td>
+        </tr>
+    `;
+
+    try {
+        const response = await fetch(API_URL, {
+            headers: getAdminHeaders()
+        });
+
+        if (!response.ok) {
+            throw new Error("Unable to fetch enquiries");
+        }
+
+        const result = await response.json();
+        const enquiries = result.data || [];
+
+        document.getElementById("totalEnquiries").textContent =
+            enquiries.length;
+
+        document.getElementById("pendingEnquiries").textContent =
+            enquiries.length;
+
+        const types = new Set(
+            enquiries.map(item =>
+                (item.eventType || "").toLowerCase()
+            )
+        );
+
+        document.getElementById("eventTypes").textContent =
+            types.size;
+
+        table.innerHTML = "";
+
+        if (enquiries.length === 0) {
+            table.innerHTML = `
+                <tr>
+                    <td colspan="7" class="empty">
+                        No enquiries found.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        enquiries.forEach(enquiry => {
+
+            const row = document.createElement("tr");
+
+            const values = [
+                enquiry.name,
+                enquiry.email,
+                enquiry.phone,
+                enquiry.eventType,
+                enquiry.eventDate,
+                enquiry.guestCount
+            ];
+
+            values.forEach(value => {
+                const td = document.createElement("td");
+                td.textContent = value || "-";
+                row.appendChild(td);
+            });
+
+            const actionCell = document.createElement("td");
+
+            const viewBtn = document.createElement("button");
+            viewBtn.className = "btn view-btn";
+            viewBtn.textContent = "View";
+
+            viewBtn.addEventListener("click", () => {
+                viewEnquiry(enquiry._id);
+            });
+
+            const editBtn = document.createElement("button");
+            editBtn.className = "btn edit-btn";
+            editBtn.textContent = "Edit";
+
+            editBtn.addEventListener("click", () => {
+                editEnquiry(enquiry._id, enquiry);
+            });
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "btn delete-btn";
+            deleteBtn.textContent = "Delete";
+
+            deleteBtn.addEventListener("click", () => {
+                deleteEnquiry(enquiry._id);
+            });
+
+            actionCell.append(viewBtn, editBtn, deleteBtn);
+            row.appendChild(actionCell);
+
+            table.appendChild(row);
+        });
+
+    } catch (error) {
+
+        console.error("Dashboard Error:", error);
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="7" class="empty">
+                    Cannot connect to server.
+                    <br>
+                    Make sure backend is running.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+
+// ================= VIEW ENQUIRY =================
+
+async function viewEnquiry(id) {
+
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            headers: getAdminHeaders()
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Unable to view enquiry");
+        }
+
+        const enquiry = result.data;
+
+        alert(
+            "CUSTOMER ENQUIRY\n\n" +
+            "Name: " + enquiry.name +
+            "\nEmail: " + enquiry.email +
+            "\nPhone: " + enquiry.phone +
+            "\nEvent: " + enquiry.eventType +
+            "\nDate: " + enquiry.eventDate +
+            "\nGuests: " + enquiry.guestCount +
+            "\nMessage: " + enquiry.message
+        );
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+
+// ================= EDIT ENQUIRY =================
+
+async function editEnquiry(id, enquiry) {
+
+    const updatedName = prompt("Customer Name:", enquiry.name);
+    if (updatedName === null) return;
+
+    const updatedEmail = prompt("Customer Email:", enquiry.email);
+    if (updatedEmail === null) return;
+
+    const updatedPhone = prompt("Customer Phone:", enquiry.phone);
+    if (updatedPhone === null) return;
+
+    const updatedEventType = prompt("Event Type:", enquiry.eventType);
+    if (updatedEventType === null) return;
+
+    const updatedEventDate = prompt("Event Date (YYYY-MM-DD):", enquiry.eventDate);
+    if (updatedEventDate === null) return;
+
+    const updatedGuestCount = prompt("Guest Count:", enquiry.guestCount);
+    if (updatedGuestCount === null) return;
+
+    const updatedMessage = prompt("Message:", enquiry.message || "");
+    if (updatedMessage === null) return;
+
+    if (
+        !updatedName.trim() ||
+        !updatedEmail.trim() ||
+        !updatedPhone.trim() ||
+        !updatedEventType.trim() ||
+        !updatedEventDate.trim() ||
+        !updatedGuestCount.trim()
+    ) {
+        alert("Please fill all required fields!");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: "PUT",
+
+            headers: getAdminHeaders(true),
+
+            body: JSON.stringify({
+                name: updatedName.trim(),
+                email: updatedEmail.trim(),
+                phone: updatedPhone.trim(),
+                eventType: updatedEventType.trim(),
+                eventDate: updatedEventDate.trim(),
+                guestCount: Number(updatedGuestCount),
+                message: updatedMessage.trim()
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Update failed");
+        }
+
+        alert("Enquiry updated successfully!");
+
+        loadEnquiries();
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+
+// ================= DELETE ENQUIRY =================
+
+async function deleteEnquiry(id) {
+
+    const confirmDelete = confirm(
+        "Are you sure you want to delete this enquiry?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: "DELETE",
+            headers: getAdminHeaders()
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Delete failed");
+        }
+
+        alert("Enquiry deleted successfully!");
+
+        loadEnquiries();
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+
+// ================= INITIAL LOAD =================
+
+if (adminToken) {
+    verifyAdmin();
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Dashboard | EventCraft</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">EventCraft</a>
+
+            <nav class="nav-links" id="navLinks">
+                <a href="#dashboard">Dashboard</a>
+                <a href="#profile">My Profile</a>
+                <a href="#enquiries">My Enquiries</a>
+                <a href="#" id="logoutBtn">Logout</a>
+            </nav>
+        </nav>
+    </header>
+
+    <main>
+        <section id="dashboard">
+            <h1>Welcome to EventCraft!</h1>
+            <p>Your personal event dashboard.</p>
+        </section>
+
+        <section id="profile">
+            <h2>My Profile</h2>
+            <div id="profileDetails">
+                Loading profile...
+            </div>
+        </section>
+
+        <section id="enquiries">
+            <h2>My Enquiries</h2>
+            <div id="enquiryList">
+                Your enquiries will appear here.
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const token = localStorage.getItem("eventcraft_token");
+
+        // Check login token
+        if (!token) {
+            window.location.href = "login.html";
+        }
+
+        // Fetch customer profile
+        async function loadProfile() {
+            try {
+                const response = await fetch(
+                    "http://localhost:3000/api/auth/me",
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message);
+                }
+
+                const customer = data.customer;
+
+                document.getElementById("profileDetails").innerHTML = `
+                    <p><strong>Name:</strong> ${customer.firstName} ${customer.lastName}</p>
+                    <p><strong>Email:</strong> ${customer.email}</p>
+                    <p><strong>Phone:</strong> ${customer.phone}</p>
+                `;
+
+            } catch (error) {
+                alert("Session expired. Please login again.");
+                localStorage.removeItem("eventcraft_token");
+                window.location.href = "login.html";
+            }
+        }
+
+        // Fetch logged-in customer's enquiries
+         async function loadMyEnquiries() {
+         try {
+            const response = await fetch(
+            "http://localhost:3000/enquiry/my-enquiries",
+            {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message);
+        }
+
+        const enquiryList = document.getElementById("enquiryList");
+
+        enquiryList.innerHTML = "";
+
+        if (data.data.length === 0) {
+            enquiryList.textContent = "You have not submitted any enquiries yet.";
+            return;
+        }
+
+        data.data.forEach((enquiry) => {
+            const card = document.createElement("div");
+
+            card.innerHTML = `
+                <h3>${enquiry.eventType}</h3>
+                <p>Event Date: ${enquiry.eventDate}</p>
+                <p>Guests: ${enquiry.guestCount}</p>
+                <p>Status: ${enquiry.status}</p>
+            `;
+
+            enquiryList.appendChild(card);
+        });
+
+            } catch (error) {
+             document.getElementById("enquiryList").textContent = error.message;
+             }
+        }
+
+        // Load profile
+        if (token) {
+            loadProfile();
+            loadMyEnquiries();
+        }
+
+        // Logout functionality
+        const logoutBtn = document.getElementById("logoutBtn");
+
+        logoutBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                localStorage.removeItem("eventcraft_token");
+
+                window.location.href = "login.html";
+            });
+        </script>
+
+</body>
+</html>
